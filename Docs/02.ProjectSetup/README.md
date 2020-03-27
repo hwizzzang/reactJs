@@ -133,3 +133,162 @@ function App() {
 
 export default App;
 ```
+
+---
+
+## 2.2 React Router part Two
+
+URL을 살펴보면 `http://localhost:3001/#/`에서 맨 뒤에 `#/`가 붙는 게 보입니다. 이는 바로 Hash Router의 일부입니다. 미관상으로 좋아보이지 않으니 삭제할 건데요.
+
+Router 컴포넌트에서 코드를 변경해보겠습니다.
+
+### **src/Components/Router.js**
+
+```javascript
+.
+.
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+.
+.
+.
+export default () => (
+    <Router>
+        <Route path="/" exact component={Home} />
+        <Route path="/TV" component={TV} />
+        <Route path="/search" component={Search} />
+        <Route path="/detail" component={Detail} />
+    </Router>
+);
+
+```
+
+- `BrowserRouter` : HTML history API를 사용함.
+- `HashRouter` : 해당 페이지의 Hash를 사용함.
+
+상단에서 `BrowserRouter`로 변경 후, React Router의 `Composition`을 사용하기 위해 Home Route를 제외한 나머지 Route의 `exact`를 지워줍니다. 여기서 `BrowserRouter`는 해쉬태그 없이 일반적인 페이지처럼 동작하게끔 만들어줍니다.
+
+`Composition`은 두 개 이상의 Route를 동시에 렌더링하는 방식입니다.
+
+예를 들어, TV라는 Router 안에 popular라는 tab이 있다고 생각해봅시다. '/tv/popular'로 이동 시 `<Route path="/TV/popular" component={~~} />`와 같이 코드를 작성할 수 있는데요. 여기서 `components={}`를 쓰는 대신 `render`를 사용할 수 있습니다. 이 부분은 Function이 됩니다.
+
+```javascript
+<Router>
+    <Route path="/TV" component={TV} />
+    <Route path="/TV/popular" render={() => <h1>popular</h1>)} />
+</Router>
+```
+
+'/tv/popular'로 이동해 보면 두 Route 모두 path에 일치하기 때문에 Component 모두 Render 되었습니다. '/tv'에도 일치하고, '/tv/popular'에도 일치합니다. 많은 페이지를 Render 해야할 때 Composition을 이용할 수 있습니다.
+
+이어서 Header 컴포넌트를 생성해보겠습니다.
+
+### **src/Components/Header.js**
+
+```javascript
+import React from 'react';
+
+export default () => (
+    <header>
+        <ul>
+            <li>
+                <a href="/">Movies</a>
+            </li>
+            <li>
+                <a href="/tv">TV</a>
+            </li>
+            <li>
+                <a href="/search">Search</a>
+            </li>
+        </ul>
+    </header>
+);
+```
+
+Header 컴포넌트를 App 컴포넌트에 연결해줍니다.
+
+```javascript
+import React from 'react';
+import Router from 'Components/Router';
+import Header from 'Components/Header';
+
+function App() {
+    return (
+        <>
+            <Header />
+            <Router />
+        </>
+    );
+}
+
+export default App;
+```
+
+Header 컴포넌트가 Router 밖에 있기 때문에 모든 페이지에서 Header가 나타나게됩니다. 그리고 URL을 바꾸면 Router는 자동적으로 새 Route를 Render합니다.
+
+다음에는 Router 컴포넌트로 돌아가 Redirect을 해보겠습니다.
+
+### **src/Components/Router.js**
+
+```javascript
+import React from 'react';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'; // Redirect 추가
+import Home from 'Routes/Home';
+import Detail from 'Routes/Detail';
+import TV from 'Routes/TV';
+import Search from 'Routes/Search';
+
+export default () => (
+    <Router>
+        <Route path="/" exact component={Home} />
+        <Route path="/tv" component={TV} />
+        <Route path="/tv/popular" render={() => <h1>popular</h1>)} />
+        <Route path="/search" component={Search} />
+        <Route path="/detail" component={Detail} />
+        <Redirect from="*" to="" /> // 추가
+    </Router>
+);
+```
+
+`<Redirect from="*" to="" />`를 살펴보자면, 웹사이트에서 어느 페이지를 가든 `exact`을 작성한 페이지를 살펴봅니다. 만약 '/search' 페이지로 이동을 한다면 '/' 에서는 false일 것입니다.
+
+`<Redirect from="*" to="" />`는 일치하는 Route가 없다면 어느 페이지든 받아서 '/'로 보내줍니다.
+
+여기서 어느 링크를 눌러도 Home으로 Redirect가 됩니다. '/'에 해당하는 Route를 Render하고, Redirect에 해당하는 것도 Render합니다. 이는 '/tv/popular'에서 두 개의 Route를 Render하는 것처럼, URL의 앞 부분이 같기 때문입니다.
+
+이 부분을 고치기 위해서는 `Switch`라는 것을 사용해야합니다. `Switch`는 한 번에 오직 하나의 Route만 Render합니다.
+
+### **src/Components/Router.js**
+
+```javascript
+.
+.
+import {
+    BrowserRouter as Router,
+    Route,
+    Redirect,
+    Switch, // 추가
+} from 'react-router-dom';
+.
+.
+.
+export default () => (
+    <Router>
+        <Switch> // 추가
+            <Route path="/" exact component={Home} />
+            <Route path="/tv" exact component={TV} />
+            <Route path="/tv/popular" render={() => <h1>popular</h1>)} />
+            <Route path="/search" component={Search} />
+            <Route path="/detail" component={Detail} />
+            <Redirect from="*" to="" />
+        </Switch>
+    </Router>
+);
+```
+
+'/tv/popular'로 이동 시 `<h1>popular</h1>`는 Render 되지 않고 있는데요. tv Route에 `exact`를 추가해주면 '/tv/popular'으로 이동 시 popular가 보이게 됩니다.
+
+### **src/Components/Router.js**
+
+```javascript
+<Route path="/tv" exact component={TV} />
+```
