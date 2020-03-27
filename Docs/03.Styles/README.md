@@ -106,3 +106,49 @@ export default () => (
     </Router>
 );
 ```
+
+## 3.3 GlobalStyles and Header
+
+Global Style을 작성하기 위해서는 styled-reset을 설치해야합니다.
+
+```bash
+$ yarn add styled-reset
+```
+
+GlobalStyles.js 파일도 생성하고 App 컴포넌트에서 import합니다.
+
+### **src/Components/GlobalStyles.js**
+
+```javascript
+import { createGlobalStyle } from 'styled-components';
+import reset from 'styled-reset';
+
+
+const GlobalStyles = createGlobalStyle`
+    ${reset};
+    .
+    .
+    .
+`
+
+export default GlobalStyles;
+```
+
+### **src/Components/GlobalStyles.js**
+
+```javascript
+import React from 'react';
+import Router from 'Components/Router';
+import GlobalStyles from 'Components/GlobalStyles'; // 추가
+
+function App() {
+    return (
+        <>
+            <Router />
+            <GlobalStyles /> // 추가
+        </>
+    );
+}
+
+export default App;
+```
