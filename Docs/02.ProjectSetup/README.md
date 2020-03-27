@@ -57,8 +57,6 @@ ReactDOM.render(
 NODE_PATH=src
 ```
 
----
-
 ## 2.1 React Router Part One
 
 `App.js` 파일을 `src/Components`에 넣어준 후 `index.js` 파일에서 `App.js`의 경로를 변경해줍니다.
@@ -133,8 +131,6 @@ function App() {
 
 export default App;
 ```
-
----
 
 ## 2.2 React Router part Two
 
@@ -292,3 +288,43 @@ export default () => (
 ```javascript
 <Route path="/tv" exact component={TV} />
 ```
+
+## 정리
+
+1. npm이나 yarn을 사용한 create-react-app 설치
+    - `$ yarn global add create-react-app`
+    - `$ create-react-app project-name`
+
+2. npx을 사용한 create-react-app 설치
+    - `$ yarn global add npx`
+    - `$ npm i npx -g`
+    - `$ npx create-react-app project-name`
+
+3. src를 기본 경로로 지정
+    - .env 파일 생성 후 `NODE_PATH=src`
+
+4. react-router-dom 설치
+    - `$ yarn add react-router-dom`
+
+5. Route
+    - `path` : 어느 URL에서 해당 Route를 render할 지 알려줍니다
+    - `exact` : 정확히 해당 path여야 한다는 것을 알려줍니다.
+    - `component={}` : 해당 Route에 왔을 때 어떤 컴포넌트를 보여줄 것인지 작성합니다.
+
+6. HashRouter와 BrowserRouter의 차이
+    - `BrowserRouter` : HTML history API를 사용합니다
+    - `HashRouter` : 해당 페이지의 Hash를 사용합니다.
+
+7. Composition
+    - 두 개 이상의 Route를 동시에 렌더링하는 방식입니다.
+    - Router 컴포넌트의 상단에서 `BrowserRouter`로 변경 후, React Router의 `Composition`을 사용하기 위해 Home Route를 제외한 나머지 Route의 `exact`를 지워줍니다.
+    - `render={}` 사용 시 Function을 작성합니다.
+
+8. redirect
+    - `<Redirect from="*" to="" />`는 일치하는 Route가 없다면 어느 페이지든 받아서 '/'로 보내줍니다. 여기서 어느 링크를 눌러도 Home으로 Redirect가 됩니다.
+
+9. Switch
+    - `Switch`는 한 번에 오직 하나의 Route만 Render합니다.
+    - `redirect` 사용 시 두 개의 Route를 Render하는 상황을 해결할 수 있습니다.
+    - Router 안에서 `Switch`로 묶어 사용합니다.
+    - 많은 페이지를 Render 해야할 때 Composition 방식을 사용하는데, 이 때 상위 Route에 extact를 작성합니다.
