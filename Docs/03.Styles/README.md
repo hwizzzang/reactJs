@@ -253,3 +253,31 @@ console.log 값을 살펴보면 Router에 있는 `history`, `location`, `match`�
 다시 이전 코드로 돌아가겠습니다.
 
 여기서 원하는 것은 `history`인데요. tv 링크를 클릭했을 때 `location`의 `pathname` 값이 '/tv'가 된 것을 확인할 수 있습니다. 따라서 `props.location.pathname` 값을 얻어오면 됩니다.
+
+```javascript
+import { Link, withRouter } from 'react-router-dom';
+.
+.
+.
+export default withRouter(({ location: {pathname} }) => ( // 변경(props 확장)
+    <Header>
+        <List>
+            <Item current={false}>
+                <SLink to="/">Movies</SLink>
+            </Item>
+            <Item current={true}>
+                <SLink to="/tv">TV</SLink>
+            </Item>
+            <Item current={false}>
+                <SLink to="/search">Search</SLink>
+            </Item>
+        </List>
+    </Header>
+));
+```
+
+`props`를 적어주는 대신 spread Operator를 이용하여 props를 확장할 수 있습니다. 
+
+여기서 `current`는 boolean 타입입니다. 따라서 `current`가 `true`이려면 `pathname`이 '/', '/tv', '/search' 이어야합니다.
+
+이제 withRouter 컴포넌트를 통해 Header가 어느 경로에 있는 지 알 수 있게됩니다.

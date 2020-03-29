@@ -38,15 +38,14 @@ const SLink = styled(Link)`
 
 export default withRouter(({ location: { pathname } }) => (
     <Header>
-        {console.log(props)}
         <List>
-            <Item current={false}>
+            <Item current={pathname === "/"}>
                 <SLink to="/">Movies</SLink>
             </Item>
-            <Item current={true}>
+            <Item current={pathname === "/tv"}>
                 <SLink to="/tv">TV</SLink>
             </Item>
-            <Item current={false}>
+            <Item current={pathname === "/search"}>
                 <SLink to="/search">Search</SLink>
             </Item>
         </List>
