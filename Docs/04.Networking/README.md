@@ -75,7 +75,7 @@ export const moviesApi = {
     nowPlaying: () => api.get('movie/now_playing'),
     upComing: () => api.get('movie/upComing'),
     popular: () => api.get('movie/popular'),
-    movieDetail: () =>
+    movieDetail: (id) =>
         api.get(`movie/${id}`, {
             params: {
                 append_to_responsive: 'videos',
@@ -90,13 +90,16 @@ export const moviesApi = {
 export const tvApi = {
     toRated: () => api.get('tv/to_rated'),
     popular: () => api.get('tv/popular'),
-    upComing: () => api.get('tv/airing_today'),
-    tvDetail: () =>
+    airingToday: () => api.get('tv/airing_today'),
+    // 파라미터 append_to_response 값으로 videos를 가져오면
+    // video의 id, key, 이름... 등의 값을 가져올 수 있다
+    showDetail: (id) =>
         api.get(`tv/${id}`, {
             params: {
                 append_to_responsive: 'videos',
             },
         }),
+    // term 값은 URL encoding 되어야 함
     search: (term) =>
         api.get('search/tv', {
             query: encodeURIComponent(term),
