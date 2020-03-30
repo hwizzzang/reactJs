@@ -6,10 +6,10 @@ import {
     Switch,
 } from 'react-router-dom';
 import Header from 'Components/Header';
-import Home from 'Routes/Home';
-import TV from 'Routes/TV';
-import Search from 'Routes/Search';
-import Detail from 'Routes/Detail';
+import Home from 'Routes/Home/index';
+import TV from 'Routes/TV/index';
+import Search from 'Routes/Search/index';
+import Detail from 'Routes/Detail/index';
 
 export default () => (
     <Router>
