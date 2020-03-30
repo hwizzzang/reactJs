@@ -27,14 +27,6 @@ const GlobalStyles = createGlobalStyle`
     h1 {
         margin: 0;
         font-size: 2em;
-        @include default;
-    }
-
-    h2,
-    h3,
-    p,
-    span {
-        @include default;
     }
 
     p {
@@ -158,7 +150,6 @@ const GlobalStyles = createGlobalStyle`
         appearance: none;
         border-radius: 0.5rem;
         box-sizing: border-box;
-        // @include bg-img("../img/arrow-grey.svg", auto);
         background-size: 1rem 0.5491rem;
         background-position: 91% 50%;
     }
@@ -242,7 +233,6 @@ const GlobalStyles = createGlobalStyle`
 
         li {
             list-style: none;
-            @include default;
         }
     }
 

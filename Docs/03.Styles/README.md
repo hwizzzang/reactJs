@@ -173,7 +173,7 @@ const Item = styled.li`
         ${(props) => (props.current ? '#3498db' : 'transparent')};
 `;
 
-export default () => (
+export default (props) => (
     <Header>
         <List>
             <Item current={false}>
@@ -262,13 +262,13 @@ import { Link, withRouter } from 'react-router-dom';
 export default withRouter(({ location: {pathname} }) => ( // 변경(props 확장)
     <Header>
         <List>
-            <Item current={false}>
+            <Item current={pathname === '/'}>
                 <SLink to="/">Movies</SLink>
             </Item>
-            <Item current={true}>
+            <Item current={pathname === '/tv'}>
                 <SLink to="/tv">TV</SLink>
             </Item>
-            <Item current={false}>
+            <Item current={pathname === '/search'}>
                 <SLink to="/search">Search</SLink>
             </Item>
         </List>
@@ -276,7 +276,7 @@ export default withRouter(({ location: {pathname} }) => ( // 변경(props 확장
 ));
 ```
 
-`props`를 적어주는 대신 spread Operator를 이용하여 props를 확장할 수 있습니다. 
+`props`를 적어주는 대신 spread Operator를 이용하여 props를 확장할 수 있습니다.
 
 여기서 `current`는 boolean 타입입니다. 따라서 `current`가 `true`이려면 `pathname`이 '/', '/tv', '/search' 이어야합니다.
 
