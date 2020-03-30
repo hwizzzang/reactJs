@@ -14,7 +14,7 @@ src/API.js 파일을 새로 생성해주는데, 이 파일은 오직 네트워�
 import axios from 'axios';
 ```
 
-API.js 파일을 가지고 작업하기 위해서 Axios를 설치해주겠습니다. 
+API.js 파일을 가지고 작업하기 위해서 Axios를 설치해야합니다.
 
 ```bash
 $ yarn add Axios
@@ -53,4 +53,53 @@ export default api;
 
 위의 코드를 테스트해보기 위해 api를 export하고 index.js 에서 import 한 후, 개발자 도구에서 network를 확인해보면 api를 확인할 수 있습니다.
 
-## 4.2 API Verbs part One
+## 4.2 API Verbs part One, Two
+
+API.js 파일에서 2개의 오브젝트를 생성하겠습니다.
+
+### **src/API.js**
+
+```javascript
+import axios from 'axios';
+
+// instance 설정
+const api = axios.create({
+    baseURL: 'https://api.themoviedb.org/3/',
+    params: {
+        api_key: '74bbea107aee977bd9deadbadcf7c3be',
+        laguage: 'en-US',
+    },
+});
+
+export const moviesApi = {
+    nowPlaying: () => api.get('movie/now_playing'),
+    upComing: () => api.get('movie/upComing'),
+    popular: () => api.get('movie/popular'),
+    movieDetail: () =>
+        api.get(`movie/${id}`, {
+            params: {
+                append_to_responsive: 'videos',
+            },
+        }),
+    search: (term) =>
+        api.get('search/movie', {
+            query: encodeURIComponent(term),
+        }),
+};
+
+export const tvApi = {
+    toRated: () => api.get('tv/to_rated'),
+    popular: () => api.get('tv/popular'),
+    upComing: () => api.get('tv/airing_today'),
+    tvDetail: () =>
+        api.get(`tv/${id}`, {
+            params: {
+                append_to_responsive: 'videos',
+            },
+        }),
+    search: (term) =>
+        api.get('search/tv', {
+            query: encodeURIComponent(term),
+        }),
+};
+```
