@@ -269,3 +269,45 @@ export default class extends React.Component {
 ```
 
 ## 5.3 TV Comtainer
+
+TV Container도 Home Container와 같이 코드를 작성해줍니다.
+
+### **src/Routes/TV/TVContainer**
+
+```javascript
+(...)
+export default class extends React.Component {
+    (...)
+    async componentDidMount() {
+        try {
+            const {
+                data: { results: topRated },
+            } = await tvApi.topRated();
+
+            const {
+                data: { results: popular },
+            } = await tvApi.popular();
+
+            const {
+                data: { results: airingToday },
+            } = await tvApi.airingToday();
+
+            this.setState({
+                topRated,
+                popular,
+                airingToday,
+            });
+        } catch {
+            this.setState({
+                error: "Can't find TV information.",
+            });
+        } finally {
+            this.setState({
+                loading: false,
+            });
+        }
+    }
+    (...)
+}
+(...)
+```
