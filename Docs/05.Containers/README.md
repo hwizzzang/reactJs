@@ -311,3 +311,188 @@ export default class extends React.Component {
 }
 (...)
 ```
+
+## 5.4 Search Container
+
+Search Container는 모든 로직들을 가집니다.
+
+첫 번째 로직은 handleSubmit으로, form에서 text를 입력하고 enter를 누르면 그것이 handleSubmit이 됩니다. handleSubmit은 searchTerm이 빈칸(공백)이 아닌 것을 체크하고, search 함수를 실행합니다.
+
+handleSubmit을 작성해보겠습니다.
+
+try에서 해줄 작업들은 : 누군가 검색했을 때 로딩을 true로 만들것임. 디폴트 로딩은 false. 타이핑하고 검색했을 때 로딩을 true로.
+
+### **src/Routes/Search/SearchContainer**
+
+```javascript
+import React from 'react';
+import SearchPresenter from './SearchPresenter';
+import { moviesApi, tvApi } from 'API';
+
+export default class extends React.Component {
+    state = {
+        movieResults: null,
+        tvResults: null,
+        searchTerm: '',
+        loading: false, // 검색하고 엔터 누르면 true
+        error: null,
+    };
+
+    handleSubmit = () => {
+        const { searchTerm } = this.state;
+        if (searchTerm !== '') {
+            this.searchByTerm();
+        }
+    };
+
+    searchByTerm = async () => {
+        const { searchTerm } = this.state;
+        try {
+            const movieResults = await moviesApi.search(searchTerm);
+            const showResults = await tvApi.search(searchTerm);
+
+            console.log(movieResults, showResults);
+            this.setState({
+                loading: true,
+            });
+        } catch {
+            this.setState({
+                error: "Can't find results",
+            });
+        } finally {
+            this.setState({
+                loading: false,
+            });
+        }
+    };
+
+    render() {
+        const {
+            movieResults,
+            tvResults,
+            searchTerm,
+            loading,
+            error,
+        } = this.state;
+
+        return (
+            <SearchPresenter
+                movieResults={movieResults}
+                tvResults={tvResults}
+                searchTerm={searchTerm}
+                loading={loading}
+                error={error}
+            />
+        );
+    }
+}
+```
+
+위의 코드에서는 아무것도 검색하지 않아 `console.log(movieResults, tvResults);`을 입력하여도 값이 출력되지 않습니다. 값을 출력하기 위해 시뮬레이션으로 `searchTerm`에 "code"를 넣어준 후 `componentDidMount` 됐을 때 `handleSubmit`을 호출해보겠습니다.
+
+### **src/Routes/Search/SearchContainer**
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    state = {
+        movieResults: null,
+        tvResults: null,
+        searchTerm: 'code', // 검색어 "code" 추가
+        loading: false, // 검색하고 엔터 누르면 true
+        error: null,
+    };
+
+    componentDidMount() { // componentDidMount 됐을 때 handleSubmit 호출
+        this.handleSubmit();
+    }
+
+    (...)
+}
+```
+
+위의 시뮬레이션으로 `handleSubmit`가 호출되고 이어서 `searchByTerm`도 호출되어 `movieResults`, `showResults`가 출력됩니다.
+
+원하는 값을 얻으려면 `data.results.something` 으로 접근해야하므로 코드를 변경해줍니다.
+
+로딩될 때 `movieResults`, `tvResults`를 가져오고, 그 다음 `setState`해줍니다.
+
+### **src/Routes/Search/SearchContainer**
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    (...)
+
+    searchByTerm = async () => {
+        const { searchTerm } = this.state;
+        this.setState({
+            loading: true,
+        });
+        try {
+            const {
+                data: { results: movieResults }, // 접근방식 변경
+            } = await moviesApi.search(searchTerm);
+            const {
+                data: { results: tvResults }, // 접근방식 변경
+            } = await tvApi.search(searchTerm);
+
+            this.setState({ // setState 추가
+                movieResults,
+                tvResults,
+            });
+        } catch {
+            this.setState({
+                error: "Can't find results",
+            });
+        } finally {
+            this.setState({
+                loading: false,
+            });
+        }
+    };
+}
+```
+
+다시 돌아와서, 시뮬레이션으로 작성해 둔 `componentDidMount`를 삭제하고 `searchTerm` 값을 빈 값(공백"")으로 변경해줍니다.
+
+이제, `input` 값으로 검색하고, 리턴 받을 때 작동하게끔 만들기 위해서는 `handleSubmit`을 함수로 `SearchPresenter`에 모두 보내야합니다.
+
+### **src/Routes/Search/SearchContainer**
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    (...)
+
+    render() {
+        const {
+            movieResults,
+            tvResults,
+            searchTerm,
+            loading,
+            error,
+        } = this.state;
+
+        return (
+            <SearchPresenter
+                movieResults={movieResults}
+                tvResults={tvResults}
+                searchTerm={searchTerm}
+                loading={loading}
+                error={error}
+                handleSubmit={this.handleSubmit} // handleSubmit 전달
+            />
+        );
+    }
+}
+```
+
+`handleSubmit`을 보낸 후 `SearchPresenter`에서 폼을 만들고, 셋업 한 후 `onSubmit`을 호출하도록 만들 것입니다.
+
+`handleSubmit`을 호출하기 위해서는 `handleSubmit`은 `searchByTerm`을 호출하고, `searchByTerm`에서 모든 작업을 준비해야합니다.
+
+다음은 Detail 컴포넌트를 작업해야하는데요. (7:58)
