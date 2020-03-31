@@ -1,5 +1,6 @@
 import React from 'react';
 import HomePresenter from './HomePresenter';
+import { moviesApi } from 'API';
 
 export default class extends React.Component {
     state = {
@@ -10,12 +11,36 @@ export default class extends React.Component {
         loading: true,
     };
 
-    // 여기에 모든 로직 추가 (api 가져오기, error 처리, HomePresenter로 바로 가는 state값을 렌더링)
+    async componentDidMount() {
+        try {
+            const {
+                data: { results: nowPlaying },
+            } = await moviesApi.nowPlaying();
+            const {
+                data: { results: upComing },
+            } = await moviesApi.upComing();
+            const {
+                data: { results: popular },
+            } = await moviesApi.popular();
+            this.setState({
+                nowPlaying,
+                upComing,
+                popular,
+            });
+        } catch {
+            this.setState({
+                error: "Can't find movies information.",
+            });
+        } finally {
+            this.setState({
+                loading: false,
+            });
+        }
+    }
 
     render() {
-        // 객체 비구조화 할당
         const { nowPlaying, upComing, popular, error, loading } = this.state;
-
+        console.log(this.state);
         return (
             <HomePresenter
                 nowPlaying={nowPlaying}
