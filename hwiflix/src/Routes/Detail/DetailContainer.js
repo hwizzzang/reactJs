@@ -12,6 +12,17 @@ export default class extends React.Component {
 
     // 여기에 모든 로직 추가 (api 가져오기, error 처리, DetailPresenter로 바로 가는 state값을 렌더링)
 
+    async componentDidMount() {
+        const {
+            match: {
+                params: { id },
+            },
+        } = this.props;
+
+        console.log(this.props);
+    }
+    // 여기서 하다가 말음 ㅋㅋ;;
+
     render() {
         const { result, error, loading } = this.state;
 

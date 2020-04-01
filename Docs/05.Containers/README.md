@@ -524,3 +524,66 @@ export default () => (
 ```
 
 `<Route path="/movie/:id" component={Detail} />`에서 ':'가 의미하는 것은 `ID`이며, 'id:' 이 부분은 뭐로든 변경될 수 있습니다.
+
+## 5.5 Detail Container part One
+
+Header 컴포넌트는 `withRouter` 컴포넌트를 사용하여 Router 컴포넌트, Router 함수들을 가지고 작업하였으므로 각 라우터의 위치를 알고있습니다.  디폴트로 리액트 Router가 모든 정보를 Route들에게 주기 때문에 밑의 작업들을 Detail에 해줄 필요가 없습니다. 예를 들어, Header는 Route가 아니기 때문에 Router에서 Location 정보를 받을 수 없는 것과 같은데요.
+
+하지만 Home, TV, Search, Detail. default로 Router는 모든 Route들에게 props를 줍니다. 밑에서 확인해보겠습니다.
+
+### **src/Routes/Detail/DetailContainer**
+
+```javascript
+(...)
+export default class extends React.Component {
+    (...)
+
+    render() {
+        (...)
+
+        console.log(this.props);
+
+        (...)
+    }
+}
+```
+
+'localhost:3000/movie/1'으로 이동해서 확인해보면 '{history: {…}, location: {…}, match: {…}, staticContext: undefined}'와 같이 Detail이 있고, Header가 받은 props와 같은 값들을 가지고 있음을 알 수 있습니다.
+
+이와 같은 경우, 아무것도 꾸며줄 필요가 없습니다. 디폴트로 Router가 정보를 Route들에게 주기 때문인데요.
+
+첫 번째로 해야할 작업은 현재 경로가 '/movie'에 있는 지, '/show'에 있는지 알아야합니다. 이 둘은 같은 페이지, 같은 컴포넌트로 연결되어있습니다.
+
+두 번째, 어떤 숫자가 뒤에 붙는지 알아봐야합니다. 아까 출력한 props를 확인해보면 props는 match를 가지고 있는데, match 안에는 params, id가 있습니다. 이를 통해 리액트 라우터가 각각 다른 장소에 파라미터를 전달한다는 것을 알 수 있습니다.
+
+우선 다음과 같이 작성해보도록하겠습니다.
+
+props를 가져와야하므로 match.params.id를 작성합니다.
+
+### **src/Routes/Detail/DetailContainer**
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    (...)
+
+    async componentDidMount() {
+        const {
+            match: {
+                params: { id },
+            },
+        } = this.props;
+
+        console.log(this.props);
+    }
+
+    (...)
+}
+```
+
+콘솔 결과로 id 값이 출력되는 것을 확인할 수 있습니다.
+
+돌아가서 props의 출력값을 다시 확인해보면 history가 있으며 이는 수정할 수 있습니다.
+
+사용자가 id에 숫자가 아닌 값을 입력할 수 있으므로 id가 숫자인지 아닌지 판별할 수 있어야하는데요. api의 id 값은 숫자를 검색하기 때문에 문자는 (4:42)
