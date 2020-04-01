@@ -491,8 +491,36 @@ export default class extends React.Component {
 }
 ```
 
-`handleSubmit`을 보낸 후 `SearchPresenter`에서 폼을 만들고, 셋업 한 후 `onSubmit`을 호출하도록 만들 것입니다.
+`handleSubmit`을 보낸 후 `SearchPresenter`에서 폼을 만들고, 셋업 한 후 `onSubmit`을 호출하도록 만들 것입니다. `handleSubmit`을 호출하기 위해서는 `handleSubmit`은 `searchByTerm`을 호출하고, `searchByTerm`에서 모든 작업을 준비해야합니다.
 
-`handleSubmit`을 호출하기 위해서는 `handleSubmit`은 `searchByTerm`을 호출하고, `searchByTerm`에서 모든 작업을 준비해야합니다.
+다음은 Detail 컴포넌트를 작업해야하는데요.
 
-다음은 Detail 컴포넌트를 작업해야하는데요. (7:58)
+보이는 화면에는 아직 Detail Router을 사용하고 있지 않습니다. 사용자들이 '/movie/12' 로 이동할 수 있도록 만들기 위해서는 `ID`를 가지고 사용자들을 `movieDetail`로 이동할 수 있게끔 만들어야합니다.
+
+URL에서 `ID`를 얻어 그 `ID`로 검색할 수 있도록 합니다. TV Router도 똑같습니다. 다른 점은 movie를 찾을지, TV를 찾을지 알아내야 한다는 것입니다.
+
+movie와 tv를 위한 Router 각 하나씩 만들어주겠습니다.
+컴포넌트의 router는 똑같지만 url은 다를 것입니다. 예를 들어, ID12를 가진 movie를 찾을 건지, ID12를 가진 TV를 찾을 건지 알아야합니다.
+
+### **src/Components/Router.js**
+
+```javascript
+(...)
+export default () => (
+    <Router>
+        <>
+            <Header />
+            <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/tv" component={TV} />
+                <Route path="/search" component={Search} />
+                <Route path="/movie/:id" component={Detail} /> // 추가
+                <Route path="/tv/:id" component={Detail} /> // 추가
+                <Redirect from="*" to="" />
+            </Switch>
+        </>
+    </Router>
+);
+```
+
+`<Route path="/movie/:id" component={Detail} />`에서 ':'가 의미하는 것은 `ID`이며, 'id:' 이 부분은 뭐로든 변경될 수 있습니다.
