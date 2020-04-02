@@ -17,11 +17,15 @@ export default class extends React.Component {
             match: {
                 params: { id },
             },
+            history: { push },
         } = this.props;
 
-        console.log(this.props);
+        const parsedId = Number(id);
+
+        if (isNaN(parsedId)) {
+            return push('/');
+        }
     }
-    // 여기서 하다가 말음 ㅋㅋ;;
 
     render() {
         const { result, error, loading } = this.state;

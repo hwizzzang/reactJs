@@ -584,6 +584,63 @@ export default class extends React.Component {
 
 콘솔 결과로 id 값이 출력되는 것을 확인할 수 있습니다.
 
-돌아가서 props의 출력값을 다시 확인해보면 history가 있으며 이는 수정할 수 있습니다.
+돌아와서 props의 출력값을 다시 확인해보면 history가 있는 것을 확인할 수 있으며, 이는 수정할 수 있습니다.
 
-사용자가 id에 숫자가 아닌 값을 입력할 수 있으므로 id가 숫자인지 아닌지 판별할 수 있어야하는데요. api의 id 값은 숫자를 검색하기 때문에 문자는 (4:42)
+사용자가 id에 숫자가 아닌 값을 입력할 수 있으므로 id가 숫자인지 아닌지 판별할 수 있어야하는데요. api의 id 값은 숫자를 검색하기 때문에 string 요청을 하지 않아도 됩니다.(4:42)
+
+`typeof id`를 출력해보겠습니다.
+
+### **src/Routes/Detail/DetailContainer**
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    (...)
+
+    async componentDidMount() {
+        const {
+            match: {
+                params: { id },
+            },
+        } = this.props;
+
+        console.log(typeof id);
+    }
+
+    (...)
+}
+```
+
+id를 숫자, 문자 어느 것으로 입력해도 `string`이 출력됩니다. id는 `string`이라는 것을 알 수 있는데요. 이때, `parseInt`, `Number`를 사용하면 string을 숫자로 변환해줍니다.
+    - Number(str) : 문자열을 인자로 받으며 해당 문자열을 숫자로 바꿔줍니다. 숫자가 아닌 경우 NaN을 반환
+    - parseInt(str) : `Number(str)`와 동일하게 문자열을 인자로 받으며 해당 문자열을 숫자로 바꿔줍니다. 숫자가 아닌 경우에 더해서 숫자로 시작하는 경우 숫자가 끝날 때 까지만 형변환을 하여 반환함. 시작이 숫자가 아니면 Number()와 마잔가지로 NaN을 반환.
+
+### **src/Routes/Detail/DetailContainer**
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    (...)
+
+    async componentDidMount() {
+        const {
+            match: {
+                params: { id },
+            },
+            history: { push }, // 추가
+        } = this.props;
+
+        const parsedId = parseInt(id);
+
+        if (isNaN(parsedId)) {
+            return push('/');
+        }
+    }
+
+    (...)
+}
+```
+
+parsedId가 number가 아니면, props에서 historu.push를 가져옵니다. 이때 라우터에 새 URL을 푸시하기 위해 `push('/')`를 작성합니다. 이렇게 코드를 작성하고 나면 숫자가 아닐 때 `home('/')` 으로 돌아갑니다.
