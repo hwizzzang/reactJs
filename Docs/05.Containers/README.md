@@ -644,3 +644,176 @@ export default class extends React.Component {
 ```
 
 parsedId가 number가 아니면, props에서 historu.push를 가져옵니다. 이때 라우터에 새 URL을 푸시하기 위해 `push('/')`를 작성합니다. 이렇게 코드를 작성하고 나면 숫자가 아닐 때 `home('/')` 으로 돌아갑니다.
+
+
+## 5.6 Detail Container part Two
+
+이어서 `this.props`를 출력하여 `location.pathname`을 가져와야합니다.
+
+### **src/Routes/Detail/DetailContainer**
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    (...)
+
+    async componentDidMount() {
+        const {
+            match: {
+                params: { id },
+            },
+            history: { push },
+            location: { pathname }, // 추가
+        } = this.props;
+
+        const parsedId = parseInt(id);
+
+        if (isNaN(parsedId)) {
+            return push('/');
+        }
+    }
+
+    (...)
+}
+```
+
+콘솔창에 테스트를 해봅니다.
+
+```javascript
+const path = "/movie/234";
+path.includes("/movie/")
+// true
+```
+
+pathname을 알고있으니 가져와서 아래와 같이 전체 클래스로 작성해줍니다.
+
+### **src/Routes/Detail/DetailContainer**
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    (...)
+
+    async componentDidMount() {
+        const {
+            match: {
+                params: { id },
+            },
+            history: { push },
+            location: { pathname },
+        } = this.props;
+
+        this.isMovie = pathname.includes('/movie/'); // 전체 class에 저장
+
+        const parsedId = parseInt(id);
+
+        if (isNaN(parsedId)) {
+            return push('/');
+        }
+    }
+
+    (...)
+}
+```
+
+search를 작업하기 이전에 `state`를 `consrtuctor`(생성자)를 사용하여 변경해보도록하겠습니다.
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    // state를 constructor로 변경
+    constructor(props) {
+        super(props); //여기서 props는 { pathname }이 아님. { pathname } 존재하지 않음. 생성자 클래스
+        const {
+            location: { pathname },
+        } = props;
+        this.state = { // 변경
+            // 클래스가 생성됨
+            result: null,
+            error: null,
+            loading: true,
+            isMovie: pathname.includes('/movie/'), //  변경
+        };
+    }
+
+    async componentDidMount() {
+        const {
+            match: {
+                params: { id },
+            },
+            history: { push },
+        } = this.props;
+
+        const parsedId = Number(id);
+
+        if (isNaN(parsedId)) {
+            return push('/');
+        }
+    }
+
+    (...)
+}
+```
+
+다음은 movie를 찾습니다.
+
+```javascript
+(...)
+
+export default class extends React.Component {
+    // state를 constructor로 변경
+    constructor(props) {
+        super(props); //여기서 props는 { pathname }이 아님. { pathname } 존재하지 않음. 생성자 클래스
+        const {
+            location: { pathname },
+        } = props;
+        this.state = { // 변경
+            // 클래스가 생성됨
+            result: null,
+            error: null,
+            loading: true,
+            isMovie: pathname.includes('/movie/'), //  변경
+        };
+    }
+
+    async componentDidMount() {
+        const {
+            match: {
+                params: { id },
+            },
+            history: { push },
+        } = this.props;
+
+        const { isMovie } = this.state;
+        const parsedId = Number(id);
+
+        if (isNaN(parsedId)) {
+            return push('/');
+        }
+
+        let result = null;
+
+        try {
+            if (isMovie) {
+                ({ data: result } = await moviesApi.movieDetail(parsedId));
+            } else {
+                // const request = await tvApi.tvDetail(parsedId);
+                // result = request.data;
+                ({ data: result } = await tvApi.tvDetail(parsedId));
+            }
+            console.log(result);
+        } catch {
+            this.setState({ error: "Can't find anything" });
+        } finally {
+            this.setState({ loading: false });
+        }
+    }
+
+    (...)
+}
+```
+
+(9:35)
