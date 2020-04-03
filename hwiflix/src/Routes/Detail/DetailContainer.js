@@ -68,4 +68,4 @@ export default class extends React.Component {
         );
     }
 }
-// 코드는 다 입력했음. 정리는 9:35부터
+// 코드는 다 입력했음. 정리는 9:35부터 작성

@@ -816,4 +816,4 @@ export default class extends React.Component {
 }
 ```
 
-(9:35)
+(9:35) 여기서부터 작성
