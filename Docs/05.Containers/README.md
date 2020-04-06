@@ -829,3 +829,30 @@ var a, b;
 {a, b} = {a:1, b:2}는 유효한 독립 구문이 아닙니다. 좌변의 {a, b}이 객체 리터럴이 아닌 블록으로 간주되기 때문입니다.
 
 하지만, ({a, b} = {a:1, b:2})는 유효한데, var {a, b} = {a:1, b:2}와 같습니다. ( .. ) 표현식 앞에는 세미콜론이 있어야 합니다. 그렇지 않을 경우 이전 줄과 연결되어 함수를 실행하는데 이용될 수 있습니다.
+
+## 6.0 Presenter Structure
+
+각 Route의 Presenter에 props를 받아와주고 PropTypes를 사용하여 타입을 체크해줍니다. HomePresenter를 예시로 다른 Route의 Presenter도 작성해줍니다.
+
+### **src/Route/HomePresenter**
+
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
+    null;
+
+HomePresenter.PropTypes = {
+    nowPlaying: PropTypes.array,
+    upComing: PropTypes.array,
+    popular: PropTypes.array,
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string,
+};
+
+export default HomePresenter;
+```
+
+여기서 `isRequired`를 붙이면 이는 필수적으로 있어야한다는 뜻이 됩니다.

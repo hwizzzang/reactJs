@@ -50,8 +50,8 @@ export default class extends React.Component {
         const {
             movieResults,
             tvResults,
-            searchTerm,
             loading,
+            searchTerm,
             error,
         } = this.state;
 
@@ -59,8 +59,8 @@ export default class extends React.Component {
             <SearchPresenter
                 movieResults={movieResults}
                 tvResults={tvResults}
-                searchTerm={searchTerm}
                 loading={loading}
+                searchTerm={searchTerm}
                 error={error}
                 handleSubmit={this.handleSubmit}
             />
