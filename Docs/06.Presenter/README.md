@@ -183,3 +183,161 @@ const Grid = styled.div`
 `;
 (...)
 ```
+
+## 6.2 TVPresenter and Loader Components
+
+TVPresenter도 HomePresenter와 동일하게 작업해줍니다.
+
+### **src/Routes/Tv/TvPresenter.js**
+
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import Section from 'Components/Section';
+
+const Container = styled.div`
+    padding: 0 10px;
+`;
+
+const TVPresenter = ({ topRated, popular, airingToday, loading, error }) =>
+    loading ? null : (
+        <Container>
+            {topRated && topRated.length > 0 && (
+                <Section title="Top Rated Shows">
+                    {topRated.map((show) => show.name)}
+                </Section>
+            )}
+            {popular && popular.length > 0 && (
+                <Section title="Popular Shows">
+                    {popular.map((show) => show.name)}
+                </Section>
+            )}
+            {airingToday && airingToday.length > 0 && (
+                <Section title="Airing Today">
+                    {airingToday.map((show) => show.name)}
+                </Section>
+            )}
+        </Container>
+    );
+
+TVPresenter.propTypes = {
+    topRated: PropTypes.array,
+    popular: PropTypes.array,
+    airingToday: PropTypes.array,
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string,
+};
+
+export default TVPresenter;
+
+```
+
+여기서 문제는 각 카테고리를 클릭했을 때 빈 페이지가 보였다가 로딩이됩니다. Loader를 생성하여 빈 페이지에 보여주도록 하겠습니다.
+
+loader도 component를 만들겠습니다
+
+### **src/Components/Loader.js**
+
+```javascript
+import React from 'react';
+import styled from 'styled-components';
+
+const Container = styled.div`
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+
+    span {
+        font-size: 24px;
+    }
+`;
+
+const Loader = () => (
+    <Container>
+        <span role="img" aria-label="Loading">
+            👀
+        </span>
+    </Container>
+);
+
+export default Loader;
+
+```
+
+위의 코드에서 이모지는 screen reader를 위해 span으로 감싼 후 image role을 추가하여 접근하기 쉽도록 해야합니다.
+
+그리고 Presenter(Home,TV)로 돌아가 `loading ? null ~` 을 `loading ? <Loader />` 로 변경해줍니다.
+
+### **src/Route/Home/HomePresenter.js**
+
+```javascript
+(...)
+
+const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
+    loading ? (
+        <Loader /> // 변경
+    ) : (
+
+        (...)
+    );
+
+(...)
+```
+
+여기서 중요한 부분은, HomePresenter는 항상 Load 되어야합니다. length나 map에 의해 시작하면 loaded되지 않아 작동하지 않게됩니다. 따라서 추가로 두 개의 stage로 loading과 load를 확인해야합니다.
+
+다음은 Search를 작업합니다. `input`과 `sections`를 이용한 result, 그리고 실제 포스터들을 가져와 만들도록 하겠습니다.
+
+### **src/Components/Section.js**
+
+```javascript
+(...)
+const Grid = styled.div`
+    margin-top: 25px;
+    display: grid; // 추가
+    grid-template-columns: repeat(auto-fill); // 추가
+    grid-gap: 25px; // 추가
+`;
+(...)
+```
+
+다음은 movie와 show 제목의 스타일을 수정해주겠습니다.
+
+### **src/Route/Home/HomePresenter.js**
+
+```javascript
+(...)
+const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
+    loading ? (
+        <Loader />
+    ) : (
+        <Container>
+            {nowPlaying && nowPlaying.length > 0 && (
+                <Section title="Now Playing">
+                    {nowPlaying.map((movie) => (
+                        <span>{movie.title}</span> // span 추가
+                    ))}
+                </Section>
+            )}
+            {upComing && upComing.length > 0 && (
+                <Section title="upComing Movie">
+                    {popular.map((movie) => (
+                        <span>{movie.title}</span> // span 추가
+                    ))}
+                </Section>
+            )}
+            {popular && popular.length > 0 && (
+                <Section title="Popular Movie">
+                    {popular.map((movie) => (
+                        <span>{movie.title}</span> // span 추가
+                    ))}
+                </Section>
+            )}
+        </Container>
+    );
+(...)
+```
+
+위 코드에서 `span`을 추가한 것처럼 TVPresenter에서도 동일하게 수정을 해줍니다.
