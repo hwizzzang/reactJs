@@ -25,11 +25,11 @@ HomePresenter.PropTypes = {
 export default HomePresenter;
 ```
 
-여기서 `isRequired`를 붙이면 이는 필수적으로 있어야한다는 뜻이 됩니다.
+`loading: PropTypes.bool.isRequired` 이 코드에서 `isRequired`를 붙이면 이는 필수적으로 있어야한다는 뜻이 됩니다.
 
 ## 6.1 HomePresenter and Section Components
 
-다음은 section을 만들 건데, 해당 Route안에 들어갈 내용들을 section안에 넣게됩니다. 우선 Section.js 파일을 만들어줍니다.
+다음은 section을 만들 건데, section은 해당 Route안에 들어갈 내용들을 안에 넣게됩니다. 우선 Section.js 파일을 만들어줍니다.
 
 ### **src/Components/Section.js**
 
@@ -74,7 +74,7 @@ export default Section;
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Section from 'Components/Section';
+import Section from 'Components/Section'; // Section 호출
 
 const Container = styled.div`
     padding: 0px 10px;
@@ -100,7 +100,7 @@ HomePresenter.propTypes = {
 export default HomePresenter;
 ```
 
-상단에서는 이전에 만들어 둔 `Section` 컴포넌트를 불러옵니다.
+상단에서는 이전에 만들어 둔 `Section` 컴포넌트를 불러옵니다(import).
 
 ```javascript
 const HomePresenter = ({ (...) }) => loading ? null : (<Container>(...)<Container/>)
@@ -118,7 +118,7 @@ const HomePresenter = ({ (...) }) => loading ? null : (<Container>(...)<Containe
 
 `Container`를 보여줄 때 nowPlaying의 존재도 체크해야합니다. nowPlaying이 `true`일 때, nowPlaying의 `length`가 0 이상일 때 `Section`을 보여줍니다.
 
-일반적으로 리액트에서 children은 태그 사이의 값을 받아옵니다. 따라서 `children`은 `Section` 태그 사이의 movie가 됩니다.
+일반적으로 리액트에서 `children`은 태그 사이의 값을 받아옵니다. 따라서 `children`은 `Section` 태그 사이의 movie가 됩니다.
 
 다음은 map()을 사용하여 nowPlaying의 `title`과 `children`을 가져와줍니다.
 
@@ -133,3 +133,53 @@ const HomePresenter = ({ (...) }) => loading ? null : (<Container>(...)<Containe
 ```
 
 다른 props(upComing, popular)도 똑같이 가져와줍니다.
+
+```javascript
+(...)
+
+const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
+    loading ? null : (
+        <Container>
+            {nowPlaying && nowPlaying.length > 0 && (
+                <Section title="Now Playing">
+                    {nowPlaying.map((movie) => movie.title)}
+                </Section>
+            )}
+            {upComing && upComing.length > 0 && ( // 추가
+                <Section title="upComing Movie">
+                    {popular.map((movie) => movie.title)}
+                </Section>
+            )}
+            {popular && popular.length > 0 && ( // 추가
+                <Section title="Popular Movie">
+                    {popular.map((movie) => movie.title)}
+                </Section>
+            )}
+        </Container>
+    );
+
+(...)
+```
+
+Section.js로 이동하여 now playing에서 스타일을 변경해줍니다.
+
+### **src/Conponents/Section.js**
+
+```javascript
+(...)
+const Container = styled.div`
+    :not(:last-child) {
+        margin-bottom: 50px;
+    }
+`;
+
+const Title = styled.span`
+    font-size: 16px;
+    font-weight: 600;
+`;
+
+const Grid = styled.div`
+    margin-top: 25px;
+`;
+(...)
+```
