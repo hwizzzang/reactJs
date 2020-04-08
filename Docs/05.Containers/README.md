@@ -719,6 +719,8 @@ export default class extends React.Component {
 
 search를 작업하기 이전에 `state`를 `consrtuctor`(생성자)를 사용하여 변경해보도록하겠습니다.
 
+### **src/Routes/Detail/DetailContainer**
+
 ```javascript
 (...)
 
@@ -797,11 +799,11 @@ export default class extends React.Component {
 
         try {
             if (isMovie) {
-                ({ data: result } = await moviesApi.movieDetail(parsedId));
+                ({ data: result } = await moviesApi.movieDetail(parsedId)); // 변경
             } else {
                 // const request = await tvApi.tvDetail(parsedId);
                 // result = request.data;
-                ({ data: result } = await tvApi.tvDetail(parsedId));
+                ({ data: result } = await tvApi.tvDetail(parsedId)); // 변경
             }
             console.log(result);
         } catch {
@@ -827,4 +829,4 @@ var a, b;
 
 {a, b} = {a:1, b:2}는 유효한 독립 구문이 아닙니다. 좌변의 {a, b}이 객체 리터럴이 아닌 블록으로 간주되기 때문입니다.
 
-하지만, ({a, b} = {a:1, b:2})는 유효한데, var {a, b} = {a:1, b:2}와 같습니다. ( .. ) 표현식 앞에는 세미콜론이 있어야 합니다. 그렇지 않을 경우 이전 줄과 연결되어 함수를 실행하는데 이용될 수 있습니다. 테스트
+하지만, ({a, b} = {a:1, b:2})는 유효한데, var {a, b} = {a:1, b:2}와 같습니다. ( .. ) 표현식 앞에는 세미콜론이 있어야 합니다. 그렇지 않을 경우 이전 줄과 연결되어 함수를 실행하는데 이용될 수 있습니다.
