@@ -341,3 +341,5 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
 ```
 
 위 코드에서 `span`을 추가한 것처럼 TVPresenter에서도 동일하게 수정을 해줍니다.
+
+<!-- 6.2 정리, 코드 작성 완료 / 6.3 시작 -->
