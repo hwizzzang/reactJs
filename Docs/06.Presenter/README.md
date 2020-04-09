@@ -317,21 +317,21 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
             {nowPlaying && nowPlaying.length > 0 && (
                 <Section title="Now Playing">
                     {nowPlaying.map((movie) => (
-                        <span>{movie.title}</span> // span 추가
+                        <span key={movie.id}>{movie.title}</span> // span 추가
                     ))}
                 </Section>
             )}
             {upComing && upComing.length > 0 && (
                 <Section title="upComing Movie">
                     {popular.map((movie) => (
-                        <span>{movie.title}</span> // span 추가
+                        <span key={movie.id}>{movie.title}</span> // span 추가
                     ))}
                 </Section>
             )}
             {popular && popular.length > 0 && (
                 <Section title="Popular Movie">
                     {popular.map((movie) => (
-                        <span>{movie.title}</span> // span 추가
+                        <span key={movie.id}>{movie.title}</span> // span 추가
                     ))}
                 </Section>
             )}
@@ -342,4 +342,248 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
 
 위 코드에서 `span`을 추가한 것처럼 TVPresenter에서도 동일하게 수정을 해줍니다.
 
-<!-- 6.2 정리, 코드 작성 완료 / 6.3 시작 -->
+## 6.3 SearchPresenter and Loader Components
+
+다음은 SearchPresenter을 작업하겠습니다.
+
+### **src/Routes/Search/SearchPresenter**
+
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import Section from 'Components/Section';
+
+const Container = styled.div`
+    padding: 0 20px;
+`;
+
+const Form = styled.form`
+    margin-bottom: 50px;
+    width: 100%;
+`;
+
+const Input = styled.input`
+    all: unset;
+    font-size: 28px;
+    width: 100%;
+`;
+
+const SearchPresenter = ({
+    movieResults,
+    tvResults,
+    error,
+    searchTerm,
+    loading,
+    handleSubmit,
+    updateTerm,
+}) => (
+    <Container>
+        <Form onSubmit={handleSubmit}>
+            <Input
+                type="text"
+                placeholder="Search Movies or TV Shows"
+                value={searchTerm}
+                onChange={updateTerm}
+            />
+        </Form>
+    </Container>
+);
+
+SearchPresenter.propTypes = {
+    movieResults: PropTypes.array,
+    tvResults: PropTypes.array,
+    error: PropTypes.string,
+    searchTerm: PropTypes.string,
+    loading: PropTypes.bool.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    updateTerm: PropTypes.func.isRequired,
+};
+
+export default SearchPresenter;
+```
+
+form에서는 submit 기본 이벤트를 차단할 것이며 input도 가지고 있어야합니다.
+
+searchContainer에서 이전에 작성한 코드를 살펴보면 handleSubmit은 searchTerm과 searchs들을 찾아야하므로 form 안에 input을 생성해줍니다.
+
+`input`에서 `value`를 가지는 이유는 `input`을 제어할 수 있어야 하기 때문인데요. search movies나 tv shows는 `input`의 `value`를 추적해야 할 필요가 있기 때문에 입력한 값에 연결해야합니다.
+
+### **src/Routes/Search/SearchContainer**
+
+```javascript
+(...)
+export default class extends React.Component {
+    state = {
+        movieResults: null,
+        tvResults: null,
+        searchTerm: 'test', // 값 입력 test
+        loading: false,
+        error: null,
+    };
+    (...)
+}
+(...)
+```
+
+위의 SearchContainer에서 `searchTerm`에 값을 입력해보면 `input`은 입력한 값을 기본 `value`로 가지게됩니다. 이는 movies, shows 둘 다 `state`를 가지고 있기 때문인데요.
+`value={searchTerm}`을 삭제해도 여전히 작동합니다. `value`를 얻기 위해서는 `state`에 `searchTerm`이 있어야합니다.
+
+테스트 이전으로 돌아가, 현재 상태에서 입력이 안 되는 이유는 update에 관한 `value`가 있는 함수를 만들지 않았기 때문인데요.
+
+이 함수를 만들기 전에 form에서 `submit`을 해보겠습니다. ENTER를 누르면 form에 submitting 되어 값이 전송됩니다.
+
+여기서, 이 동작의 문제는 브라우저가 page를 새로고침하게 되면서 상태(state)를 잃어버리게됩니다.
+
+해결 방법으로 이벤트를 가로채는 방법이 있는데, 밑의 코드와 같이 해당 이벤트를 차단해주면 됩니다.
+
+### **src/Routes/Search/SearchContainer**
+
+```javascript
+(...)
+export default class extends React.Component {
+    (...)
+    handleSubmit = (event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        (...)
+    };
+}
+(...)
+```
+
+Presenter처럼 스타일도 추가해줍니다.
+
+### **src/Routes/Search/SearchPresenter**
+
+```javascript
+(...)
+const Container = styled.div`
+    padding: 0 20px;
+`;
+
+const Form = styled.form`
+    margin-bottom: 50px;
+    width: 100%;
+`;
+
+const Input = styled.input`
+    all: unset;
+    font-size: 28px;
+    width: 100%;
+`;
+(...)
+```
+
+밑의 코드처럼 update function을 만들어준 후 SearchPresenter에 전달해줍니다.
+
+### **src/Routes/Search/SearchContainer**
+
+```javascript
+export default class extends React.Component {
+
+    (...)
+
+    updateTerm = (event) => { // update function
+        const {
+            target: { value },
+        } = event;
+
+        console.log(value)
+
+        this.setState({
+            searchTerm: value,
+        });
+    };
+
+    (...)
+
+    render() {
+
+        (...)
+
+        return (
+            <SearchPresenter
+                movieResults={movieResults}
+                tvResults={tvResults}
+                loading={loading}
+                searchTerm={searchTerm}
+                error={error}
+                handleSubmit={this.handleSubmit}
+                updateTerm={this.updateTerm} // 추가
+            />
+        );
+    }
+}
+```
+
+updateTerm 함수에서 event 매개변수는 target를 가지고 target은 value를 갖습니다.(비구조화할당)
+
+`console.log(value)`을 출력해보면 단 하나의 letter만을 출력하는데요. 이는 `this.setState({});`를 사용하면됩니다.
+
+검색 결과는 network에서 확인할 수 있는데, newwork 관련된 것들을 clear한 후 submit하면 자동으로 검색하게됩니다.
+
+밑에서는 loading event에 대한 결과를 보여주겠습니다
+
+### **src/Routes/Search/SearchPresenter**
+
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import Section from 'Components/Section';
+import Loader from 'Components/Loader';
+
+(...)
+
+const SearchPresenter = ({
+    movieResults,
+    tvResults,
+    error,
+    searchTerm,
+    loading,
+    handleSubmit,
+    updateTerm,
+}) => (
+    <Container>
+        <Form onSubmit={handleSubmit}>
+            (...)
+        </Form>
+        {loading ? ( //  loading event result
+            <Loader /> // 로딩중이면 로더를 보여줌
+        ) : ( // 로딩중이 아니라면 movie results or show results
+            <> // fragment 사용
+                {movieResults && movieResults.length > 0 && (
+                    <Section title="Movie Results">
+                        {movieResults.map((movie) => (
+                            <span key={movie.id}>{movie.title}</span>
+                        ))}
+                    </Section>
+                )}
+                {tvResults && tvResults.length > 0 && (
+                    <Section title="TV Show Results">
+                        {tvResults.map((show) => (
+                            <span key={show.id}>{show.name}</span>
+                        ))}
+                    </Section>
+                )}
+            </>
+        )}
+    </Container>
+);
+
+SearchPresenter.propTypes = {
+    movieResults: PropTypes.array,
+    tvResults: PropTypes.array,
+    error: PropTypes.string,
+    searchTerm: PropTypes.string,
+    loading: PropTypes.bool.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    updateTerm: PropTypes.func.isRequired,
+};
+
+export default SearchPresenter;
+```
+
+이제 검색 결과가 화면에서 보이는데요. 검색 시 결과가 없을 때의 상황도 고려하여 작업해야합니다.
