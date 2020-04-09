@@ -587,3 +587,131 @@ export default SearchPresenter;
 ```
 
 이제 검색 결과가 화면에서 보이는데요. 검색 시 결과가 없을 때의 상황도 고려하여 작업해야합니다.
+
+## 6.4 Message Component
+
+error text와 not found text 작업을 하겠습니다.
+
+### **src/Components/Error.js**
+
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const Container = styled.div`
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+`;
+
+const Text = styled.span`
+    color: #e74c3c;
+`;
+
+const Error = ({ text }) => (
+    <Container>
+        <Text>{text}</Text>
+    </Container>
+);
+
+Error.propTypes = {
+    text: PropTypes.string.isRequired,
+};
+
+export default Error;
+```
+
+HomePresenter에 error시 보여줄 Error 컴포넌트를 작성해줍니다.
+
+### **src/Routes/Home/HomePresenter.js**
+
+```javascript
+(...)
+import Error from 'Components/Error'; // 추가
+
+const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
+    loading ? (
+        <Loader />
+    ) : (
+        <Container>
+            (...)
+            {error && <Error text={error} />} // 추가
+        </Container>
+    );
+(...)
+```
+
+HomeContainer에서 에러를 발생시켜보면 Home page에서는 'Can't find movies information.' 문구가 보입니다. 문구가 확인되면 에러 발생시킨 부분을 삭제한 후 위의 코드와 동일하게 search, tv 컴포넌트에도 똑같이 error 컴포넌트를 추가해줍니다. 에러는 throw로 각 Container에서 확인합니다.
+
+### **src/Routes/Home/HomeContainer.js**
+
+```javascript
+export default class extends React.Component {
+    (...)
+
+    async componentDidMount() {
+        try {
+            const {
+                data: { results: nowPlaying },
+            } = await moviesApi.nowPlaying();
+            const {
+                data: { results: upComing },
+            } = await moviesApi.upComing();
+            const {
+                data: { results: popular },
+            } = await moviesApi.popular();
+            throw Error(); // error 발생
+            this.setState({
+                nowPlaying,
+                upComing,
+                popular,
+            });
+        } catch {
+            this.setState({
+                error: "Can't find movies information.",
+            });
+        } finally {
+            this.setState({
+                loading: false,
+            });
+        }
+    }
+
+    (...)
+}
+```
+
+다음은 404 페이지를 만들겠습니다.
+
+### **src/Components/NotFound.js**
+
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const Container = styled.div`
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+`;
+
+const Text = styled.span`
+    color: #95a5a6;
+`;
+
+const NotFound = ({ text }) => (
+    <Container>
+        <Text>{text}</Text>
+    </Container>
+);
+
+NotFound.propTypes = {
+    text: PropTypes.string.isRequired,
+};
+
+export default NotFound;
+```
+
+<!-- https://academy.nomadcoders.co/courses/436641/lectures/8478816 (10:00) -->
