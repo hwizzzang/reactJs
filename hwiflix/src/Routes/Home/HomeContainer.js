@@ -33,7 +33,8 @@ export default class extends React.Component {
             });
         } finally {
             this.setState({
-                loading: false,
+                loading: false, 
+                // left
             });
         }
     }
