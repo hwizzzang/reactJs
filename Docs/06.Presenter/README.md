@@ -774,3 +774,99 @@ const SearchPresenter = ({
 );
 (...)
 ```
+
+## Poster Component part One
+
+다음은 Poster.js 파일을 생성해줍니다.
+
+Poster.js는 Movie나 tvShow와 관련이 있으며 이를 표현합니다.
+
+### **src/Components/Poster**
+
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Container = styled.div``;
+
+const ImageContainer = styled.div``;
+
+const Image = styled.div``;
+
+const Rating = styled.span``;
+
+const Title = styled.span``;
+
+const Year = styled.span``;
+
+const Poster = ({ imageUrl, title, rating, year, isMovie = false }) => (
+    <Link to={isMovie ? `/movie/${id}` : `/show/${id}`}>
+        <Container>
+            <ImageContainer>
+                <Image bgUrl={imageUrl} />
+                <Rating>
+                    <span role="img" aria-label="rating">
+                        🌟
+                    </span>
+                    {''}
+                    {rating}/10
+                </Rating>
+            </ImageContainer>
+            <Title>{title}</Title>
+            <Year>{year}</Year>
+        </Container>
+    </Link>
+);
+
+Poster.propTypes = {
+    id: PropTypes.number.isRequired,
+    imageUrl: PropTypes.string,
+    title: PropTypes.string.isRequired,
+    rating: PropTypes.number,
+    year: PropTypes.string,
+    isMovie: PropTypes.bool,
+};
+
+export default Poster;
+
+```
+
+위의 Poster 컴포넌트를 HomePresenter에서 사용해보도록하겠습니다.`
+
+### **src/Routes/Home/HomePresenter.js**
+
+```javascript
+(...)
+const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
+    loading ? (
+        <Loader />
+    ) : (
+        <Container>
+            {nowPlaying && nowPlaying.length > 0 && (
+                <Section title="Now Playing">
+                    {nowPlaying.map((movie) => (
+                        <Poster /> // 변경
+                    ))}
+                </Section>
+            )}
+            {upComing && upComing.length > 0 && (
+                <Section title="upComing Movie">
+                    {popular.map((movie) => (
+                        <Poster /> // 변경
+                    ))}
+                </Section>
+            )}
+            {popular && popular.length > 0 && (
+                <Section title="Popular Movie">
+                    {popular.map((movie) => (
+                        <Poster /> // 변경
+                    ))}
+                </Section>
+            )}
+            {error && <Message color="#e74c3c" text={error} />}
+        </Container>
+    );
+(...)
+```
