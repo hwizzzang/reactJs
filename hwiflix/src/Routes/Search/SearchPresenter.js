@@ -63,10 +63,7 @@ const SearchPresenter = ({
             movieResults &&
             tvResults.length === 0 &&
             movieResults.length === 0 && (
-                <Message
-                    color="#95a5a6"
-                    text={`Nothing found for: ${searchTerm}`}
-                />
+                <Message color="#95a5a6" text="Nothing found" />
             )}
     </Container>
 );

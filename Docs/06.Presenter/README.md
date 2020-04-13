@@ -714,4 +714,63 @@ NotFound.propTypes = {
 export default NotFound;
 ```
 
-<!-- https://academy.nomadcoders.co/courses/436641/lectures/8478816 (10:00) -->
+Error 페이지와 NotFound 페이지의 코드가 비슷하므로 Message.js 합쳐주겠습니다. Error.js 페이지와 NotFound.js는 삭제합니다. Error.js를 import 했던 HomePresenter.js에서도 Message.js를 import 하는 방식으로 수정해줍니다.
+
+### **src/Components/Message.js**
+
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const Container = styled.div`
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+`;
+
+const Text = styled.span`
+    color: ${(props) => props.color};
+`;
+
+const Message = ({ text, color }) => (
+    <Container>
+        <Text color={color}>{text}</Text>
+    </Container>
+);
+
+Message.propTypes = {
+    text: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+};
+
+export default Message;
+```
+
+SearchPresenter.js에서 Message.js를 import 하고 검색어를 찾지 못했을 때의 상태를 보여줍니다.
+
+```javascript
+
+(...)
+const SearchPresenter = ({
+    movieResults,
+    tvResults,
+    error,
+    searchTerm,
+    loading,
+    handleSubmit,
+    updateTerm,
+}) => (
+    <Container>
+        (...)
+        {error && <Message color="#e74c3c" text={error} />}
+        {tvResults && // 추가
+            movieResults &&
+            tvResults.length === 0 &&
+            movieResults.length === 0 && (
+                <Message color="#95a5a6" text="Nothing found" />
+            )}
+    </Container>
+);
+(...)
+```
