@@ -18,21 +18,54 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
             {nowPlaying && nowPlaying.length > 0 && (
                 <Section title="Now Playing">
                     {nowPlaying.map((movie) => (
-                        <Poster />
+                        <Poster
+                            key={movie.id}
+                            id={movie.id}
+                            imageUrl={movie.poster_path}
+                            title={movie.original_title}
+                            rating={movie.vote_average}
+                            year={
+                                movie.release_date &&
+                                movie.release_date.substring(0, 4)
+                            }
+                            idMovie={true}
+                        />
                     ))}
                 </Section>
             )}
             {upComing && upComing.length > 0 && (
                 <Section title="upComing Movie">
                     {popular.map((movie) => (
-                        <Poster />
+                        <Poster
+                            key={movie.id}
+                            id={movie.id}
+                            imageUrl={movie.poster_path}
+                            title={movie.original_title}
+                            rating={movie.vote_average}
+                            year={
+                                movie.release_date &&
+                                movie.release_date.substring(0, 4)
+                            }
+                            idMovie={true}
+                        />
                     ))}
                 </Section>
             )}
             {popular && popular.length > 0 && (
                 <Section title="Popular Movie">
                     {popular.map((movie) => (
-                        <Poster />
+                        <Poster
+                            key={movie.id}
+                            id={movie.id}
+                            imageUrl={movie.poster_path}
+                            title={movie.original_title}
+                            rating={movie.vote_average}
+                            year={
+                                movie.release_date &&
+                                movie.release_date.substring(0, 4)
+                            }
+                            idMovie={true}
+                        />
                     ))}
                 </Section>
             )}

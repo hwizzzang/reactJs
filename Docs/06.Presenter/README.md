@@ -775,7 +775,7 @@ const SearchPresenter = ({
 (...)
 ```
 
-## Poster Component part One
+## 6.5 Poster Component part One
 
 다음은 Poster.js 파일을 생성해줍니다.
 
@@ -833,7 +833,7 @@ export default Poster;
 
 ```
 
-위의 Poster 컴포넌트를 HomePresenter에서 사용해보도록하겠습니다.`
+위의 Poster 컴포넌트를 HomePresenter에서 사용해보도록하겠습니다. 그리고 TVPresenter, SearchPresenter에서도 HomePresenter와 같이 수정해줍니다. 
 
 ### **src/Routes/Home/HomePresenter.js**
 
@@ -847,21 +847,54 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
             {nowPlaying && nowPlaying.length > 0 && (
                 <Section title="Now Playing">
                     {nowPlaying.map((movie) => (
-                        <Poster /> // 변경
+                        <Poster
+                            key={movie.id}
+                            id={movie.id}
+                            imageUrl={movie.poster_path}
+                            title={movie.original_title}
+                            rating={movie.vote_average}
+                            year={
+                                movie.release_date &&
+                                movie.release_date.substring(0, 4)
+                            }
+                            idMovie={true}
+                        />
                     ))}
                 </Section>
             )}
             {upComing && upComing.length > 0 && (
                 <Section title="upComing Movie">
                     {popular.map((movie) => (
-                        <Poster /> // 변경
+                        <Poster
+                            key={movie.id}
+                            id={movie.id}
+                            imageUrl={movie.poster_path}
+                            title={movie.original_title}
+                            rating={movie.vote_average}
+                            year={
+                                movie.release_date &&
+                                movie.release_date.substring(0, 4)
+                            }
+                            idMovie={true}
+                        />
                     ))}
                 </Section>
             )}
             {popular && popular.length > 0 && (
                 <Section title="Popular Movie">
                     {popular.map((movie) => (
-                        <Poster /> // 변경
+                        <Poster
+                            key={movie.id}
+                            id={movie.id}
+                            imageUrl={movie.poster_path}
+                            title={movie.original_title}
+                            rating={movie.vote_average}
+                            year={
+                                movie.release_date &&
+                                movie.release_date.substring(0, 4)
+                            }
+                            idMovie={true}
+                        />
                     ))}
                 </Section>
             )}
@@ -870,3 +903,12 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
     );
 (...)
 ```
+
+```javascript
+year={
+    movie.release_date &&
+    movie.release_date.substring(0, 4)
+}
+```
+
+위의 코드와 같이 작성하는 이유는 `substring`을 사용할 때 release_date가 빈 값일 경우 substring은 function이 아니라고 에러가 발생합니다. undefined는 substring을 가지고 있지 않는데요. 오류가 날 수 있으므로 `substring`은 release_data가 존재할 때만 사용할 수 있도록 만들어줘야합니다. 위와 같이 작성하면 모든것은 release_date를 가지고 있다는 것을 알기 때문에 substring을 사용할 것입니다.
