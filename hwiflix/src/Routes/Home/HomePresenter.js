@@ -28,7 +28,7 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
                                 movie.release_date &&
                                 movie.release_date.substring(0, 4)
                             }
-                            idMovie={true}
+                            idMovie={true} //test
                         />
                     ))}
                 </Section>
