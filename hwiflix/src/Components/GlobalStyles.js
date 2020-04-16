@@ -7,7 +7,7 @@ const GlobalStyles = createGlobalStyle`
     html {
         height: 100%;
         line-height: 1.15;
-        font-size: 62.5%; // now 10px = 1rem
+        font-size: 62.5%;
     }
 
     body {
@@ -21,7 +21,7 @@ const GlobalStyles = createGlobalStyle`
     body {
         background-color: rgba(20, 20, 20, 1);
         color:white;
-        padding-top: 8rem;
+        padding-top: 5rem;
     }
 
     h1 {
@@ -169,10 +169,6 @@ const GlobalStyles = createGlobalStyle`
         }
     }
 
-    // fieldset {
-    //     padding: 0.35em 0.75em 0.625em;
-    // }
-
     legend {
         display: table;
         max-width: 100%;
@@ -189,15 +185,6 @@ const GlobalStyles = createGlobalStyle`
     textarea {
         overflow: auto;
     }
-
-    //[type="checkbox"],
-    //[type="radio"] {
-        //-webkit-appearance: none;
-        //-webkit-border-radius: 0;
-        //-webkit-box-sizing: border-box;
-        //box-sizing: border-box;
-        //padding: 0;
-    //}
 
     [type="search"] {
         outline-offset: -0.2rem;

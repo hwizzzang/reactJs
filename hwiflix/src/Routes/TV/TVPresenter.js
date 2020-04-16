@@ -29,7 +29,7 @@ const TVPresenter = ({ topRated, popular, airingToday, loading, error }) =>
                                     ? show.first_air_date.substring(0, 4)
                                     : show.first_air_date
                             }
-                            idMovie={true}
+                            // idMovie={true}
                         />
                     ))}
                 </Section>
@@ -48,7 +48,7 @@ const TVPresenter = ({ topRated, popular, airingToday, loading, error }) =>
                                     ? show.first_air_date.substring(0, 4)
                                     : show.first_air_date
                             }
-                            idMovie={true}
+                            // idMovie={true}
                         />
                     ))}
                 </Section>
@@ -67,7 +67,7 @@ const TVPresenter = ({ topRated, popular, airingToday, loading, error }) =>
                                     ? show.first_air_date.substring(0, 4)
                                     : show.first_air_date
                             }
-                            idMovie={true}
+                            // idMovie={true}
                         />
                     ))}
                 </Section>
