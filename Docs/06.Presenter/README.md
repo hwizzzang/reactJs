@@ -930,8 +930,21 @@ year={
 }
 ```
 
-`${Image}` 사용할 떄 호출할 해당 변수는 작성할 줄보다 상단에 위치해있어야함
+`${Image}` styled components에서 변수 호출할 때는 작성할 줄보다 상단에 위치해있어야함
 <!-- 6.7 정리 안 함 -->
 
 ## 6.8 Detail Container part One
 
+## 6.9 Detail Container part Two
+
+<!-- https://github.com/fullyalive/project_sugoieiga/commit/485545b2b98f5548e19feca8f7c04395479521be  이렇게 코드 변경 가능-->
+
+## 6.10 React Helmet
+
+```bash
+yarn add react-helmet
+```
+
+react helmet을 활용하면 웹 사잍의 head를 수정하기 쉬움.
+
+<!-- 6.10 React Helmet 작업중 search page에서 클릭 시  result.original_title 어쩌구 오류-->
