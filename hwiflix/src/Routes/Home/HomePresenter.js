@@ -29,6 +29,7 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
                                 movie.release_date.substring(0, 4)
                             }
                             idMovie={true}
+                            idMovie={true}
                         />
                     ))}
                 </Section>

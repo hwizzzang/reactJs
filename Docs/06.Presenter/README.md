@@ -833,7 +833,7 @@ export default Poster;
 
 ```
 
-위의 Poster 컴포넌트를 HomePresenter에서 사용해보도록하겠습니다. 그리고 TVPresenter, SearchPresenter에서도 HomePresenter와 같이 수정해줍니다. 
+위의 Poster 컴포넌트를 HomePresenter에서 사용해보도록하겠습니다. 그리고 TVPresenter, SearchPresenter에서도 HomePresenter와 같이 수정해줍니다.
 
 ### **src/Routes/Home/HomePresenter.js**
 
@@ -911,11 +911,24 @@ year={
 }
 ```
 
-위의 코드와 같이 작성하는 이유는 `substring`을 사용할 때 release_date가 빈 값일 경우 substring은 function이 아니라고 에러가 발생합니다. undefined는 substring을 가지고 있지 않는데요. 오류가 날 수 있으므로 `substring`은 release_data가 존재할 때만 사용할 수 있도록 만들어줘야합니다. 위와 같이 작성하면 모든것은 release_date를 가지고 있다는 것을 알기 때문에 substring을 사용할 것입니다.
+위의 코드와 같이 작성하는 이유는 `substring`을 사용할 때 release_date가 빈 값일 경우 `substring`은 `function`이 아니라고 에러가 발생합니다. `undefined`는 substring을 가지고 있지 않는데요. 오류가 날 수 있으므로 `substring`은 release_data가 존재할 때만 사용할 수 있도록 만들어줘야합니다. 위와 같이 작성하면 모든것은 release_date를 가지고 있다는 것을 알기 때문에 substring을 사용하게 됩니다.
 
 ## 6.7 Poster Component part Two
 
 ### **src/Components/Poster.js**
 
 <!-- https://academy.nomadcoders.co/courses/436641/lectures/8478817 -->
-<!-- 시작해야됨 코드는 bg 추가까지 완료 -->
+
+```javascript
+&:hover {
+    ${Image} {
+        opacity: 0.3;
+    }
+    ${Rating} {
+        opacity: 1;
+    }
+}
+```
+
+`${Image}` 사용할 떄 호출할 해당 변수는 작성할 줄보다 상단에 위치해있어야함
+<!-- 6.7 정리 안 함 -->
