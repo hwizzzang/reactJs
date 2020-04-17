@@ -947,4 +947,8 @@ yarn add react-helmet
 
 react helmet을 활용하면 웹 사잍의 head를 수정하기 쉬움.
 
-<!-- 6.10 React Helmet 작업중 search page에서 클릭 시  result.original_title 어쩌구 오류-->
+<!-- 6.10 React Helmet 작업 완료.-->
+<!-- 그런데 내 거는 code 검색 시 첫 번째 영화 api가 /tv로 뜨는데 원래는 /movie로 떠야함 --
+>
+<!-- https://audidas.github.io/choiflix/#/movie/461130 -->
+<!-- 상단 주소에서 비교 가능 -->
