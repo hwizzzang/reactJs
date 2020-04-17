@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
 import Loader from 'Components/Loader';
+import Message from 'Components/Message';
 
 const Container = styled.div`
     position: relative;
@@ -71,6 +72,8 @@ const OverView = styled.p`
 const DetailPresenter = ({ result, loading, error }) =>
     loading ? (
         <Loader />
+    ) : error ? (
+        <Message color="#e74c3c" text={error} />
     ) : (
         <Container>
             <Helmet>
@@ -82,7 +85,11 @@ const DetailPresenter = ({ result, loading, error }) =>
                 </title>
             </Helmet>
             <Backdrop
-                bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`}
+                bgImage={
+                    result.backdrop_path
+                        ? `https://image.tmdb.org/t/p/original${result.backdrop_path}`
+                        : require('../../assets/noPosterSmall.png')
+                }
             />
             <Content>
                 <Cover
@@ -95,14 +102,18 @@ const DetailPresenter = ({ result, loading, error }) =>
                 <Data>
                     <Title>
                         {result.original_title
-                            ? result.original_title
-                            : result.original_name}
+                            ? `${result.original_title}`
+                            : result.original_name
+                            ? `${result.original_name}`
+                            : `undefined`}
                     </Title>
                     <ItemContainer>
                         <Item>
                             {result.release_date
-                                ? result.release_date.substring(0, 4)
-                                : result.first_air_date.substring(0, 4)}
+                                ? `${result.release_date.substring(0, 4)}`
+                                : result.first_air_date
+                                ? `${result.first_air_date.substring(0, 4)}`
+                                : `undefined`}
                         </Item>
                         <Divider>•</Divider>
                         <Item>
@@ -111,6 +122,11 @@ const DetailPresenter = ({ result, loading, error }) =>
                                 : result.episode_run_time[0]
                                 ? `${result.episode_run_time[0]} min`
                                 : 'undefined'}
+                            {/* result.runtime
+                                ? `${result.runtime} min`
+                                : result.episode_run_time[0]
+                                ? `${result.episode_run_time[0]} min`
+                                : 'undefined' */}
                             {/* {result.runtime ? result.runtime :
                             result.episode_run_time[0]} */}
                         </Item>
