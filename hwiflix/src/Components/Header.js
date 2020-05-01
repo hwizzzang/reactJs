@@ -20,7 +20,6 @@ const Header = styled.header`
 const List = styled.ul`
     display: flex;
 `;
-// 헤헷dsfds
 const Item = styled.li`
     width: 50px;
     height: 50px;
