@@ -775,7 +775,7 @@ const SearchPresenter = ({
 (...)
 ```
 
-## 6.5 Poster Component part One
+## 6.5-6.6 Poster Component part One / Rendering Poster Component
 
 다음은 Poster.js 파일을 생성해줍니다.
 
@@ -833,7 +833,7 @@ export default Poster;
 
 ```
 
-위의 Poster 컴포넌트를 HomePresenter에서 사용해보도록하겠습니다. 그리고 TVPresenter, SearchPresenter에서도 HomePresenter와 같이 수정해줍니다. 
+위의 Poster 컴포넌트를 HomePresenter에서 사용해보도록하겠습니다. 그리고 TVPresenter, SearchPresenter에서도 HomePresenter와 같이 수정해줍니다.
 
 ### **src/Routes/Home/HomePresenter.js**
 
@@ -857,7 +857,7 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
                                 movie.release_date &&
                                 movie.release_date.substring(0, 4)
                             }
-                            idMovie={true}
+                            isMovie={true}
                         />
                     ))}
                 </Section>
@@ -875,7 +875,7 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
                                 movie.release_date &&
                                 movie.release_date.substring(0, 4)
                             }
-                            idMovie={true}
+                            isMovie={true}
                         />
                     ))}
                 </Section>
@@ -893,7 +893,7 @@ const HomePresenter = ({ nowPlaying, upComing, popular, loading, error }) =>
                                 movie.release_date &&
                                 movie.release_date.substring(0, 4)
                             }
-                            idMovie={true}
+                            isMovie={true}
                         />
                     ))}
                 </Section>
@@ -911,4 +911,44 @@ year={
 }
 ```
 
-위의 코드와 같이 작성하는 이유는 `substring`을 사용할 때 release_date가 빈 값일 경우 substring은 function이 아니라고 에러가 발생합니다. undefined는 substring을 가지고 있지 않는데요. 오류가 날 수 있으므로 `substring`은 release_data가 존재할 때만 사용할 수 있도록 만들어줘야합니다. 위와 같이 작성하면 모든것은 release_date를 가지고 있다는 것을 알기 때문에 substring을 사용할 것입니다.
+위의 코드와 같이 작성하는 이유는 `substring`을 사용할 때 release_date가 빈 값일 경우 `substring`은 `function`이 아니라고 에러가 발생합니다. `undefined`는 substring을 가지고 있지 않는데요. 오류가 날 수 있으므로 `substring`은 release_data가 존재할 때만 사용할 수 있도록 만들어줘야합니다. 위와 같이 작성하면 모든것은 release_date를 가지고 있다는 것을 알기 때문에 substring을 사용하게 됩니다.
+
+## 6.7 Poster Component part Two
+
+### **src/Components/Poster.js**
+
+<!-- https://academy.nomadcoders.co/courses/436641/lectures/8478817 -->
+
+```javascript
+&:hover {
+    ${Image} {
+        opacity: 0.3;
+    }
+    ${Rating} {
+        opacity: 1;
+    }
+}
+```
+
+`${Image}` styled components에서 변수 호출할 때는 작성할 줄보다 상단에 위치해있어야함
+<!-- 6.7 정리 안 함 -->
+
+## 6.8 Detail Container part One
+
+## 6.9 Detail Container part Two
+
+<!-- https://github.com/fullyalive/project_sugoieiga/commit/485545b2b98f5548e19feca8f7c04395479521be  이렇게 코드 변경 가능-->
+
+## 6.10 React Helmet
+
+```bash
+yarn add react-helmet
+```
+
+react helmet을 활용하면 웹 사잍의 head를 수정하기 쉬움.
+
+<!-- 6.10 React Helmet 작업 완료.-->
+<!-- 그런데 내 거는 code 검색 시 첫 번째 영화 api가 /tv로 뜨는데 원래는 /movie로 떠야함 --
+>
+<!-- https://audidas.github.io/choiflix/#/movie/461130 -->
+<!-- 상단 주소에서 비교 가능 -->
