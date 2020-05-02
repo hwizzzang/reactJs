@@ -15,6 +15,7 @@ const Header = styled.header`
     background: rgba(20, 20, 20, 0.7);
     box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8);
     z-index: 10;
+    sdfsdf
 `;
 
 const List = styled.ul`
@@ -26,9 +27,9 @@ const Item = styled.li`
     text-align: center;
     border-bottom: 5px solid
         ${(props) => (props.current ? '#3498db' : 'transparent')};
+
     transition: border-bottom 0.2s ease-in-out;
 `;
-
 const SLink = styled(Link)`
     display: flex;
     height: 50px;
